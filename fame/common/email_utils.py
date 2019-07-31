@@ -83,11 +83,16 @@ class EmailMessage:
             filename = os.path.basename(filepath)
 
         with open(filepath, "rb") as f:
+            '''
             self.msg.attach(MIMEApplication(
                 f.read(),
                 Content_Disposition='attachment; filename="{}"'.format(filename),
                 Name=filename
             ))
+            '''
+            part = MIMEApplication(f.read(), Name=os.path.basename(filepath))
+            part['Content-Disposition'] = 'attachment; filename="{0}"'.format(filename)
+            self.msg.attach(part)            
 
     def send(self, to, cc=[], bcc=[]):
         recipients = to + cc + bcc
